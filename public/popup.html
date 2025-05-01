@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CiderMill</title>
+    <style>
+      body {
+        width: 600px;
+        padding: 10px;
+        font-family: Arial, sans-serif;
+      }
+      h1 {
+        color: #333;
+        text-align: center;
+        font-size: 18px;
+        margin-bottom: 5px;
+      }
+      .description {
+        text-align: center;
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 15px;
+      }
+      .status {
+        text-align: center;
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 4px;
+      }
+      .on-site {
+        background-color: #d4edda;
+        color: #155724;
+      }
+      .off-site {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+      .status a {
+        color: #721c24;
+        text-decoration: underline;
+        font-weight: bold;
+      }
+      .status a:hover {
+        text-decoration: none;
+      }
+      .date-range {
+        margin: 15px 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .date-input {
+        padding: 8px;
+        margin: 5px 0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+      .date-label {
+        font-weight: bold;
+        color: #333;
+        white-space: nowrap;
+      }
+      .apply-button {
+        width: 100%;
+        padding: 8px;
+        margin-top: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        position: relative;
+      }
+      .apply-button:hover {
+        background-color: #0056b3;
+      }
+      .apply-button:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+      }
+      .link-container {
+        text-align: center;
+        margin-top: 10px;
+      }
+      .apple-link {
+        color: #007bff;
+        text-decoration: none;
+        font-size: 14px;
+      }
+      .apple-link:hover {
+        text-decoration: underline;
+      }
+      .data-table {
+        width: 100%;
+        margin-top: 15px;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+      .data-table th,
+      .data-table td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        vertical-align: top;
+      }
+      .data-table th {
+        background-color: #f8f9fa;
+        font-weight: bold;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+      }
+      .data-table-container {
+        max-height: 200px;
+        overflow-y: auto;
+        margin-top: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      .data-table-container thead {
+        position: sticky;
+        top: 0;
+        background-color: #f8f9fa;
+      }
+      .no-data {
+        text-align: center;
+        padding: 10px;
+        color: #666;
+        font-style: italic;
+      }
+      .spinner {
+        display: none;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 1s ease-in-out infinite;
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+      @keyframes spin {
+        to { transform: translateY(-50%) rotate(360deg); }
+      }
+      .loading .spinner {
+        display: block;
+      }
+      .loading .button-text {
+        margin-right: 25px;
+      }
+      .download-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+      }
+      .row-count {
+        color: #666;
+        font-size: 14px;
+      }
+      .download-link {
+        color: #007bff;
+        text-decoration: none;
+        font-size: 14px;
+      }
+      .download-link:hover {
+        text-decoration: underline;
+      }
+      .date-range-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .date-range-selector {
+        margin-right: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .date-range-select {
+        padding: 8px;
+        margin: 5px 0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      .button-container {
+        margin-left: auto;
+      }
+      .custom-date-range {
+        margin-top: 10px;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-radius: 4px;
+      }
+      .data-level {
+        margin: 15px 0;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-radius: 4px;
+      }
+      .data-level-options {
+        display: flex;
+        gap: 20px;
+        margin-top: 5px;
+      }
+      .data-level-option {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .data-level-option input[type="radio"] {
+        margin: 0;
+      }
+      .data-level-option label {
+        font-size: 14px;
+        color: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>CiderMill</h1>
+    <div class="description">Extract your Apple purchases to CSV!</div>
+    <div id="status" class="status"></div>
+    <div class="data-level">
+      <div class="data-level-options">
+        <div class="data-level-option">
+          <input type="radio" id="orderLevel" name="dataLevel" value="Orders" checked>
+          <label for="orderLevel">I want order level data</label>
+        </div>
+        <div class="data-level-option">
+          <input type="radio" id="itemLevel" name="dataLevel" value="Items">
+          <label for="itemLevel">I want item level data</label>
+        </div>
+      </div>
+    </div>
+    <div class="date-range-container">
+      <div class="date-range-selector">
+        <label class="date-label" for="dateRange">Date Range:</label>
+        <select id="dateRange" class="date-range-select">
+          <option value="monthToDate">Month to Date</option>
+          <option value="lastMonth">Last Month</option>
+          <option value="yearToDate">Year to Date</option>
+          <option value="lastYear">Last Year</option>
+          <option value="custom">Custom</option>
+        </select>
+      </div>
+      <div class="button-container">
+        <button id="applyDateRange" class="apply-button">
+          <span class="button-text">Extract</span>
+          <div class="spinner"></div>
+        </button>
+      </div>
+    </div>
+    <div id="customDateRange" class="custom-date-range" style="display: none;">
+      <label class="date-label" for="startDate">From</label>
+      <input type="date" id="startDate" class="date-input">
+      <label class="date-label" for="endDate">to</label>
+      <input type="date" id="endDate" class="date-input">
+    </div>
+    <div id="dataTableContainer" class="data-table-container" style="display: none;">
+      <table class="data-table">
+        <thead id="orderHeaders">
+          <tr>
+            <th>Order ID</th>
+            <th>Date</th>
+            <th>Total</th>
+            <th>Items</th>
+          </tr>
+        </thead>
+        <thead id="itemHeaders" style="display: none;">
+          <tr>
+            <th>Order ID</th>
+            <th>Date</th>
+            <th>Total</th>
+            <th>Title</th>
+            <th>Publisher</th>
+            <th>Subscription Info</th>
+            <th>Price</th>
+            <th>Price with Tax</th>
+          </tr>
+        </thead>
+        <tbody id="dataTableBody"></tbody>
+      </table>
+    </div>
+    <div id="downloadContainer" class="download-container" style="display: none;">
+      <span id="rowCount" class="row-count"></span>
+      <a id="downloadLink" class="download-link" href="#" download>Download CSV</a>
+    </div>
+    <script src="popup.js"></script>
+  </body>
+</html> 

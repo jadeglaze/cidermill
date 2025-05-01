@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "CiderMill",
+  "version": "1.0",
+  "description": "Checks if you're on the Apple Report a Problem page",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": ["tabs", "storage", "scripting"],
+  "host_permissions": ["https://reportaproblem.apple.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://reportaproblem.apple.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["content.js"],
+      "matches": ["https://reportaproblem.apple.com/*"]
+    }
+  ]
+} 

@@ -1,0 +1,13 @@
+- [x] Add more columns to the extracted data.
+- [x] Add a choice of orders vs. items.
+- [x] In item mode, add a field that splits out the item cost + prorated tax
+- [x] Rename "Prorated Price" to "Price with Tax"
+- [x] Add a display of the number of orders/items to the lower left.
+
+- [ ] Add instructions (call out family member selector when appropriate)
+- [ ] Preserve date range and data when closing/reopening popup.
+- [ ] Direct to Google Sheet capability?
+- [ ] GitHub repo
+- [ ] Add unit tests
+- [ ] Release!
+- [ ] Check if basic structure of page is present in addition to correct site.
